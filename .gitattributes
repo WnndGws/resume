@@ -1,0 +1,6 @@
+**.pdf filter=git-crypt diff=git-crypt
+**.tex filter=git-crypt diff=git-crypt
+**.aux filter=git-crypt diff=git-crypt
+**.fls filter=git-crypt diff=git-crypt
+**.log filter=git-crypt diff=git-crypt
+**.out filter=git-crypt diff=git-crypt
