@@ -210,9 +210,9 @@
 
 		%------------------------------------------------
 
-		\profilesection{Technical Skills}
+		%\profilesection{Technical Skills}
 		%\skills
-		\skillstexttech
+		%\skillstexttech
 
                 \profilesection{Personal Skills}
 		\skillstext
