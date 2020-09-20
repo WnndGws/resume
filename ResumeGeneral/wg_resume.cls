@@ -1,5 +1,3 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Wynand Gouws Resume
 % Version 1.1
 %
 % This template has been modified from a template downloaded from:
@@ -29,6 +27,7 @@
 %\usepackage[sfdefault]{ClearSans}
 \RequirePackage[T1]{fontenc}
 \RequirePackage{tikz}
+\usetikzlibrary{shapes.geometric, calc}
 \RequirePackage{xcolor}
 \RequirePackage[absolute,overlay]{textpos}
 \RequirePackage{ragged2e}
@@ -39,12 +38,12 @@
 \RequirePackage{marvosym}
 \RequirePackage{parskip}
 \RequirePackage{fontawesome}
+\RequirePackage{array}
 
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
 \ProcessOptions\relax
 
 %----------------------------------------------------------------------------------------
-%	 COLOURS
 %----------------------------------------------------------------------------------------
 
 \definecolor{white}{RGB}{255,255,255}
@@ -98,16 +97,48 @@
 % Command for printing the contact information icons
 \newcommand*\icon[1]{\tikz[baseline=(char.base)]{\node[shape=circle,draw,inner sep=1pt, fill=mainblue,mainblue,text=white] (char) {#1};}}
 
+% Command for printing stars filled by floating points
+%\newcommand\stars[2]{%
+\newcommand\stars[1]{%
+  \pgfmathsetmacro\pgfxa{#1 + 1}%
+  \tikzstyle{scorestars}=[star, star points=5, star point ratio=2.25, draw, inner sep=0.15em, anchor=outer point 3]%
+  \begin{tikzpicture}[baseline]
+    %\foreach \i in {1, ..., #2} {
+    \foreach \i in {1, ..., 10} {
+      \pgfmathparse{\i<=#1 ? "mainblue" : "maingray"}
+      \edef\starcolor{\pgfmathresult}
+      \draw (\i*1em, 0) node[name=star\i, scorestars, fill=\starcolor]  {};
+    }
+    \pgfmathparse{#1>int(#1) ? int(#1+1) : 0}
+    \let\partstar=\pgfmathresult
+    \ifnum\partstar>0
+      \pgfmathsetmacro\starpart{#1-(int(#1)}
+      \path [clip] ($(star\partstar.outer point 3)!(star\partstar.outer point 2)!(star\partstar.outer point 4)$) rectangle 
+      ($(star\partstar.outer point 2 |- star\partstar.outer point 1)!\starpart!(star\partstar.outer point 1 -| star\partstar.outer point 5)$);
+      \fill (\partstar*1em, 0) node[scorestars, fill=mainblue]  {};
+    \fi
+  \end{tikzpicture}%
+}
+
+
 % Command for printing skill progress bars
 \newcommand\skills[1]{ 
 	\renewcommand{\skills}{
-		\begin{tikzpicture}
-			\foreach [count=\i] \x/\y in {#1}{
-				\draw[fill=maingray,maingray] (0,\i) rectangle (6,\i+0.4);
-				\draw[fill=white,mainblue](0,\i) rectangle (\y,\i+0.4);
-				\node [above right] at (0,\i+0.4) {\x};
-			}
-		\end{tikzpicture}
+                % Use below for bars out of 6
+		%\begin{tikzpicture}
+			%\foreach [count=\i] \x/\y in {#1}{
+				%\draw[fill=maingray,maingray] (0,\i) rectangle (6,\i+0.4);
+				%\draw[fill=white,mainblue](0,\i) rectangle (\y,\i+0.4);
+				%\node [above right] at (0,\i+0.4) {\x};
+			%}
+		%\end{tikzpicture}
+                % Use below for stars out of 10
+		\foreach [count=\i] \x/\y in {#1}{
+                    \begin{itemize}
+                        \item{\x}
+                    \end{itemize}
+                    \LARGE{\stars{\y}}
+                }
 	}
 }
 
@@ -210,8 +241,8 @@
 
 		%------------------------------------------------
 
-		%\profilesection{Technical Skills}
-		%\skills
+		\profilesection{Technical Skills}
+		\skills
 		%\skillstexttech
 
                 \profilesection{Personal Skills}
