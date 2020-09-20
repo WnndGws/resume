@@ -1,0 +1,375 @@
+% Version 1.1
+%
+% This template has been modified from a template downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Carmine Spagnuolo (cspagnuolo@unisa.it)
+% Major modifications by:
+% Vel (vel@LaTeXTemplates.com)
+%
+% Major final modifications by:
+% Wynand Gouws (wynand@gouws.com.au)
+%
+% License:
+% The MIT License (see included LICENSE file)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\ProvidesClass{wg_resume}[2020/06/28 CV class]
+\LoadClass{article}
+\NeedsTeXFormat{LaTeX2e}
+
+%----------------------------------------------------------------------------------------
+%	 REQUIRED PACKAGES
+%----------------------------------------------------------------------------------------
+
+%\usepackage[sfdefault]{ClearSans}
+\RequirePackage[T1]{fontenc}
+\RequirePackage{tikz}
+\usetikzlibrary{shapes.geometric, calc}
+\RequirePackage{xcolor}
+\RequirePackage[absolute,overlay]{textpos}
+\RequirePackage{ragged2e}
+\RequirePackage{etoolbox}
+\RequirePackage{ifmtarg}
+\RequirePackage{ifthen}
+\RequirePackage{pgffor}
+\RequirePackage{marvosym}
+\RequirePackage{parskip}
+\RequirePackage{fontawesome}
+\RequirePackage{array}
+
+\DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
+\ProcessOptions\relax
+
+%----------------------------------------------------------------------------------------
+%----------------------------------------------------------------------------------------
+
+\definecolor{white}{RGB}{255,255,255}
+\definecolor{gray}{HTML}{4D4D4D}
+\definecolor{sidecolor}{HTML}{E7E7E7}
+\definecolor{mainblue}{HTML}{0E5484}
+\definecolor{maingray}{HTML}{B9B9B9}
+
+%----------------------------------------------------------------------------------------
+%	 MISC CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+%\renewcommand{\bfseries}{\color{gray}} % Make \textbf produce coloured text instead
+\pagestyle{empty} % Disable headers and footers
+\setlength{\parindent}{0pt} % Disable paragraph indentation
+
+%----------------------------------------------------------------------------------------
+%	 SIDEBAR DEFINITIONS
+%----------------------------------------------------------------------------------------
+
+\setlength{\TPHorizModule}{1cm} % Left margin
+\setlength{\TPVertModule}{2.0cm} % Top margin
+
+\newlength\imagewidth
+\newlength\imagescale
+\pgfmathsetlength{\imagewidth}{5cm}
+\pgfmathsetlength{\imagescale}{\imagewidth/600}
+
+\newlength{\TotalSectionLength} % Define a new length to hold the remaining line width after the section title is printed
+\newlength{\SectionTitleLength} % Define a new length to hold the width of the section title
+\newcommand{\profilesection}[1]{%
+	\setlength\TotalSectionLength{\linewidth}% Set the total line width
+	\settowidth{\SectionTitleLength}{\huge #1 }% Calculate the width of the section title
+	\addtolength\TotalSectionLength{-\SectionTitleLength}% Subtract the section title width from the total width
+	\addtolength\TotalSectionLength{-2.22221pt}% Modifier to remove overfull box warning
+	\vspace{8pt}% Whitespace before the section title
+	{\color{black!80} \huge #1 \rule[0.15\baselineskip]{\TotalSectionLength}{1pt}}% Print the title and auto-width rule
+}
+
+% Define custom commands for CV info
+\newcommand{\cvdate}[1]{\renewcommand{\cvdate}{#1}}
+\newcommand{\cvmail}[1]{\renewcommand{\cvmail}{#1}}
+\newcommand{\cvnumberphone}[1]{\renewcommand{\cvnumberphone}{#1}}
+\newcommand{\cvaddress}[1]{\renewcommand{\cvaddress}{#1}}
+\newcommand{\cvsite}[1]{\renewcommand{\cvsite}{#1}}
+\newcommand{\aboutme}[1]{\renewcommand{\aboutme}{#1}}
+\newcommand{\profilepic}[1]{\renewcommand{\profilepic}{#1}}
+\newcommand{\cvname}[1]{\renewcommand{\cvname}{#1}}
+\newcommand{\cvjobtitle}[1]{\renewcommand{\cvjobtitle}{#1}}
+
+% Command for printing the contact information icons
+\newcommand*\icon[1]{\tikz[baseline=(char.base)]{\node[shape=circle,draw,inner sep=1pt, fill=mainblue,mainblue,text=white] (char) {#1};}}
+
+% Command for printing stars filled by floating points
+%\newcommand\stars[2]{%
+\newcommand\stars[1]{%
+  \pgfmathsetmacro\pgfxa{#1 + 1}%
+  \tikzstyle{scorestars}=[star, star points=5, star point ratio=2.25, draw, inner sep=0.15em, anchor=outer point 3]%
+  \begin{tikzpicture}[baseline]
+    %\foreach \i in {1, ..., #2} {
+    \foreach \i in {1, ..., 10} {
+      \pgfmathparse{\i<=#1 ? "mainblue" : "maingray"}
+      \edef\starcolor{\pgfmathresult}
+      \draw (\i*1em, 0) node[name=star\i, scorestars, fill=\starcolor]  {};
+    }
+    \pgfmathparse{#1>int(#1) ? int(#1+1) : 0}
+    \let\partstar=\pgfmathresult
+    \ifnum\partstar>0
+      \pgfmathsetmacro\starpart{#1-(int(#1)}
+      \path [clip] ($(star\partstar.outer point 3)!(star\partstar.outer point 2)!(star\partstar.outer point 4)$) rectangle 
+      ($(star\partstar.outer point 2 |- star\partstar.outer point 1)!\starpart!(star\partstar.outer point 1 -| star\partstar.outer point 5)$);
+      \fill (\partstar*1em, 0) node[scorestars, fill=mainblue]  {};
+    \fi
+  \end{tikzpicture}%
+}
+
+
+% Command for printing skill progress bars
+\newcommand\skills[1]{ 
+	\renewcommand{\skills}{
+                % Use below for bars out of 6
+		%\begin{tikzpicture}
+			%\foreach [count=\i] \x/\y in {#1}{
+				%\draw[fill=maingray,maingray] (0,\i) rectangle (6,\i+0.4);
+				%\draw[fill=white,mainblue](0,\i) rectangle (\y,\i+0.4);
+				%\node [above right] at (0,\i+0.4) {\x};
+			%}
+		%\end{tikzpicture}
+                % Use below for stars out of 10
+		\foreach [count=\i] \x/\y in {#1}{
+                    \begin{itemize}
+                        \item{\x}
+                    \end{itemize}
+                    \LARGE{\stars{\y}}
+                }
+	}
+}
+
+% Command for printing skills text
+\newcommand\skillstext[1]{ 
+	\renewcommand{\skillstext}{
+		\begin{flushleft}
+			%\foreach [count=\i] \x/\y in {#1}{ 
+			\foreach [count=\i] \x in {#1}{ 
+            \begin{itemize}
+				\item \x
+				%\x$ \star $\y
+            \end{itemize}
+			}
+		\end{flushleft}
+	}
+}
+% Command for printing skills text
+\newcommand\skillstexttech[1]{ 
+	\renewcommand{\skillstexttech}{
+		\begin{flushleft}
+			%\foreach [count=\i] \x/\y in {#1}{ 
+			\foreach [count=\i] \x in {#1}{ 
+            \begin{itemize}
+				\item \x
+				%\x$ \star $\y
+            \end{itemize}
+			}
+		\end{flushleft}
+	}
+}
+
+% Command for printing references
+\newcommand{\references}[1]{
+    \renewcommand{\references}{
+        \foreach [count=\i] \w/\x/\y/\z in {#1}{ 
+            \renewcommand{\arraystretch}{1.6}
+            \begin{tabular}{p{0.5cm} @{\hskip 0.5cm}p{5cm}}
+                \textsc{\large\icon{\faUser}} & \textbf{\w}\\
+                \textsc{\large\icon{\faHome}} & \x\\
+                \textsc{\large\icon{\faWpforms}} & \y\\
+                \textsc{\large\icon{\faPencil}} & \z\\\\
+            \end{tabular}
+            }
+        }
+    }
+
+
+%----------------------------------------------------------------------------------------
+%	 SIDEBAR LAYOUT
+%----------------------------------------------------------------------------------------
+
+\newcommand{\makeprofile}{
+	\begin{tikzpicture}[remember picture,overlay]
+   		\node [rectangle, fill=sidecolor, anchor=north, minimum width=9cm, minimum height=\paperheight+1cm] (box) at (-5cm,0.5cm){};
+	\end{tikzpicture}
+
+	%------------------------------------------------
+
+	\begin{textblock}{6}(0.5, 0.2)
+			
+		%------------------------------------------------
+		
+		\ifthenelse{\equal{\profilepic}{}}{}{
+			\begin{center}
+				\begin{tikzpicture}[x=\imagescale,y=-\imagescale]
+					\clip (600/2, 567/2) circle (567/2);
+					\node[anchor=north west, inner sep=0pt, outer sep=0pt] at (0,0) {\includegraphics[width=\imagewidth]{\profilepic}};
+				\end{tikzpicture}
+			\end{center}
+		}
+
+		%------------------------------------------------
+
+		{\huge\color{mainblue}{\bf \cvname}}
+
+		%------------------------------------------------
+
+		{\Large\color{black!80}\cvjobtitle}
+
+		%------------------------------------------------
+
+		\renewcommand{\arraystretch}{1.6}
+		\begin{tabular}{p{0.5cm} @{\hskip 0.5cm}p{5cm}}
+			\ifthenelse{\equal{\cvdate}{}}{}{\textsc{\Large\icon{\Info}} & \cvdate\\}
+			\ifthenelse{\equal{\cvaddress}{}}{}{\textsc{\large\icon{\faHome}} & \cvaddress\\}
+			\ifthenelse{\equal{\cvnumberphone}{}}{}{\textsc{\large\icon{\faPhone}} & \cvnumberphone\\}
+			\ifthenelse{\equal{\cvsite}{}}{}{\textsc{\Large\icon{\Mundus}} & \cvsite\\}
+			\ifthenelse{\equal{\cvmail}{}}{}{\textsc{\Large\icon{\Letter}} & \href{mailto:\cvmail}{\cvmail}}
+		\end{tabular}
+
+		%------------------------------------------------
+		
+		\ifthenelse{\equal{\aboutme}{}}{}{
+			\profilesection{About me}
+			\begin{flushleft}
+				\aboutme
+			\end{flushleft}
+		}
+
+		%------------------------------------------------
+
+		\profilesection{Technical Skills}
+		\skills
+		%\skillstexttech
+
+                \profilesection{Personal Skills}
+		\skillstext
+		%\scriptsize
+		% (*)[The skill scale is from 0 (Fundamental Awareness) to 6 (Expert).]
+			
+		%------------------------------------------------
+
+		\profilesection{References}
+
+		\references
+			
+		%------------------------------------------------
+
+	\end{textblock}
+}
+
+%----------------------------------------------------------------------------------------
+%	 COLOURED SECTION TITLE BOX
+%----------------------------------------------------------------------------------------
+
+% Command to create the rounded boxes around the first three letters of section titles
+\newcommand*\round[2]{%
+	\tikz[baseline=(char.base)]\node[anchor=north west, draw,rectangle, rounded corners, inner sep=1.6pt, minimum size=5.5mm, text height=3.6mm, fill=#2,#2,text=white](char){#1};%
+}
+
+\newcounter{colorCounter}
+%\newcommand{\sectioncolor}[1]{%
+	%{%
+		%\round{#1}{
+			%\ifcase\value{colorCounter}%
+			%maingray\or%
+			%mainblue\or%
+			%maingray\or%
+			%mainblue\or%
+			%maingray\or%
+			%mainblue\or%
+			%maingray\or%
+			%mainblue\or%
+ 			%maingray\or%
+			%mainblue\else%
+			%maingray\fi%
+		%}%
+	%}%
+	%\stepcounter{colorCounter}%
+%}
+
+\newcommand{\sectioncolor}[1]{%
+	{%
+		\round{#1}{
+			\ifcase\value{colorCounter}%
+			mainblue\or%
+			mainblue\or%
+			mainblue\or%
+			mainblue\or%
+			mainblue\or%
+			mainblue\or%
+			mainblue\or%
+			mainblue\else%
+			mainblue\fi%
+		}%
+	}%
+	\stepcounter{colorCounter}%
+}
+
+\renewcommand{\section}[1]{
+	{%
+		\color{gray}%
+		\Large\sectioncolor{#1}%
+	}
+}
+
+\renewcommand{\subsection}[1]{
+	\par\vspace{.5\parskip}{%
+		\large\color{gray} #1%
+	}
+	\par\vspace{.25\parskip}%
+}
+
+%----------------------------------------------------------------------------------------
+%	 LONG LIST ENVIRONMENT
+%----------------------------------------------------------------------------------------
+
+% New environment for the long list
+
+\setlength{\tabcolsep}{0pt}
+\newenvironment{sidebarlonglist}{%
+  \begin{tabular}{ll}
+}{%
+  \end{tabular}
+}
+
+\newcommand{\sidebarlonglistitem}[4]{%
+	\parbox[t]{1.8cm}%
+    {{\textcolor{gray}{#1}}}&%
+
+    \parbox[t]{10.5cm}%
+    {{\bfseries{\textcolor{gray}{#2}}}\hfill{\textcolor{mainblue}{\footnotesize#3}}\\{\textcolor{gray}{#4}}}%
+\\\\}
+
+
+%----------------------------------------------------------------------------------------
+%	 SMALL LIST ENVIRONMENT
+%----------------------------------------------------------------------------------------
+
+\setlength{\tabcolsep}{0pt}
+
+% New environment for the small list
+\newenvironment{sidebarshortlist}{%
+	\begin{tabular}{ll}
+}{%
+	\end{tabular}
+}
+
+\newcommand{\sidebarshortlistitem}[2]{%
+	\parbox[t]{1.8cm}%
+    {{\textcolor{gray}{#1}}}&%
+
+    \parbox[t]{10.5cm}%
+    {{\bfseries{\textcolor{gray}{#2}}}}%
+\\\\}
+
+%----------------------------------------------------------------------------------------
+%	 MARGINS AND LINKS
+%----------------------------------------------------------------------------------------
+
+\RequirePackage[left=7.6cm,top=0.1cm,right=1cm,bottom=0.2cm,nohead,nofoot]{geometry}
+
+\RequirePackage{hyperref}
