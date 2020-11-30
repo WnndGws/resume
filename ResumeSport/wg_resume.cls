@@ -1,4 +1,4 @@
-% Version 1.1
+% Version 1.3
 %
 % This template has been modified from a template downloaded from:
 % http://www.LaTeXTemplates.com
@@ -93,6 +93,7 @@
 \newcommand{\profilepic}[1]{\renewcommand{\profilepic}{#1}}
 \newcommand{\cvname}[1]{\renewcommand{\cvname}{#1}}
 \newcommand{\cvjobtitle}[1]{\renewcommand{\cvjobtitle}{#1}}
+\newcommand{\cvgit}[1]{\renewcommand{\cvgit}{#1}}
 
 % Command for printing the contact information icons
 \newcommand*\icon[1]{\tikz[baseline=(char.base)]{\node[shape=circle,draw,inner sep=1pt, fill=mainblue,mainblue,text=white] (char) {#1};}}
@@ -125,20 +126,20 @@
 \newcommand\skills[1]{ 
 	\renewcommand{\skills}{
                 % Use below for bars out of 6
-		%\begin{tikzpicture}
-			%\foreach [count=\i] \x/\y in {#1}{
-				%\draw[fill=maingray,maingray] (0,\i) rectangle (6,\i+0.4);
-				%\draw[fill=white,mainblue](0,\i) rectangle (\y,\i+0.4);
-				%\node [above right] at (0,\i+0.4) {\x};
-			%}
-		%\end{tikzpicture}
+		\begin{tikzpicture}
+			\foreach [count=\i] \x/\y in {#1}{
+				\draw[fill=maingray,maingray] (0,\i) rectangle (6,\i+0.4);
+				\draw[fill=white,mainblue](0,\i) rectangle (\y,\i+0.4);
+				\node [above right] at (0,\i+0.4) {\x};
+			}
+		\end{tikzpicture}
                 % Use below for stars out of 10
-		\foreach [count=\i] \x/\y in {#1}{
-                    \begin{itemize}
-                        \item{\x}
-                    \end{itemize}
-                    \LARGE{\stars{\y}}
-                }
+		%\foreach [count=\i] \x/\y in {#1}{
+                    %\begin{itemize}
+                        %\item{\x}
+                    %\end{itemize}
+                    %\LARGE{\stars{\y}}
+                %}
 	}
 }
 
@@ -171,10 +172,24 @@
 	}
 }
 
+% Command for printing references without positional information
+\newcommand{\shortreferences}[1]{
+    \renewcommand{\shortreferences}{
+        \foreach [count=\i] \w/\x/\y/ in {#1}{
+            \renewcommand{\arraystretch}{1.6}
+            \begin{tabular}{p{0.5cm} @{\hskip 0.5cm}p{5cm}}
+                \textsc{\large\icon{\faUser}} & \textbf{\w}\\
+                \textsc{\large\icon{\faHome}} & \x\\
+                \textsc{\large\icon{\faPencil}} & \y\\\\
+            \end{tabular}
+            }
+        }
+    }
+
 % Command for printing references
 \newcommand{\references}[1]{
     \renewcommand{\references}{
-        \foreach [count=\i] \w/\x/\y/\z in {#1}{ 
+        \foreach [count=\i] \w/\x/\y/\z in {#1}{
             \renewcommand{\arraystretch}{1.6}
             \begin{tabular}{p{0.5cm} @{\hskip 0.5cm}p{5cm}}
                 \textsc{\large\icon{\faUser}} & \textbf{\w}\\
@@ -185,7 +200,6 @@
             }
         }
     }
-
 
 %----------------------------------------------------------------------------------------
 %	 SIDEBAR LAYOUT
@@ -227,6 +241,7 @@
 			\ifthenelse{\equal{\cvaddress}{}}{}{\textsc{\large\icon{\faHome}} & \cvaddress\\}
 			\ifthenelse{\equal{\cvnumberphone}{}}{}{\textsc{\large\icon{\faPhone}} & \cvnumberphone\\}
 			\ifthenelse{\equal{\cvsite}{}}{}{\textsc{\Large\icon{\Mundus}} & \cvsite\\}
+			\ifthenelse{\equal{\cvgit}{}}{}{\textsc{\large\icon{\faGithub}} & \cvgit\\}
 			\ifthenelse{\equal{\cvmail}{}}{}{\textsc{\Large\icon{\Letter}} & \href{mailto:\cvmail}{\cvmail}}
 		\end{tabular}
 
@@ -255,6 +270,7 @@
 		\profilesection{References}
 
 		\references
+                \shortreferences
 			
 		%------------------------------------------------
 
