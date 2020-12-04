@@ -1,6 +1,8 @@
-% Version 1.3
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% This template has been modified from a template downloaded from:
+% Version 2.0
+%
+% This template has been modified from a template downloaded on 2016/01/15 from:
 % http://www.LaTeXTemplates.com
 %
 % Original author:
@@ -9,14 +11,18 @@
 % Vel (vel@LaTeXTemplates.com)
 %
 % Major final modifications by:
-% Wynand Gouws (wynand@gouws.com.au)
+% Wynand Gouws (https://github.com/WnndGws)
 %
 % License:
 % The MIT License (see included LICENSE file)
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\ProvidesClass{wg_resume}[2020/06/28 CV class]
+%----------------------------------------------------------------------------------------
+%	 PREAMBLE
+%----------------------------------------------------------------------------------------
+
+\ProvidesClass{resume}[2020/12/04 Resume Class for a nice looking resume]
 \LoadClass{article}
 \NeedsTeXFormat{LaTeX2e}
 
@@ -24,7 +30,6 @@
 %	 REQUIRED PACKAGES
 %----------------------------------------------------------------------------------------
 
-%\usepackage[sfdefault]{ClearSans}
 \RequirePackage[T1]{fontenc}
 \RequirePackage{tikz}
 \usetikzlibrary{shapes.geometric, calc}
@@ -32,6 +37,7 @@
 \RequirePackage[absolute,overlay]{textpos}
 \RequirePackage{ragged2e}
 \RequirePackage{etoolbox}
+\RequirePackage{enumitem}
 \RequirePackage{ifmtarg}
 \RequirePackage{ifthen}
 \RequirePackage{pgffor}
@@ -44,6 +50,7 @@
 \ProcessOptions\relax
 
 %----------------------------------------------------------------------------------------
+%	 COLOURS FOR RESUME
 %----------------------------------------------------------------------------------------
 
 \definecolor{white}{RGB}{255,255,255}
@@ -58,6 +65,10 @@
 
 %\renewcommand{\bfseries}{\color{gray}} % Make \textbf produce coloured text instead
 \pagestyle{empty} % Disable headers and footers
+\tolerance=1 % Normally the lower the value, the better the paragraph will look, but you run the risk of reducing the list of possible breaks so much that you end up with overfull lines. Can range 0 to 10000
+\emergencystretch=\maxdimen % parameter which stretches text over multiple passes to balance the spacing to the set tolerance
+\hyphenpenalty=10000 % basically infinite. Wont use hyphens over line breaks
+\hbadness=10000 % Tells TeX at what point to report badness errors (i.e. underfull and overfull error). 0 to 10000. Large number is basically dont report
 \setlength{\parindent}{0pt} % Disable paragraph indentation
 
 %----------------------------------------------------------------------------------------
@@ -74,13 +85,13 @@
 
 \newlength{\TotalSectionLength} % Define a new length to hold the remaining line width after the section title is printed
 \newlength{\SectionTitleLength} % Define a new length to hold the width of the section title
-\newcommand{\profilesection}[1]{%
-	\setlength\TotalSectionLength{\linewidth}% Set the total line width
-	\settowidth{\SectionTitleLength}{\huge #1 }% Calculate the width of the section title
-	\addtolength\TotalSectionLength{-\SectionTitleLength}% Subtract the section title width from the total width
-	\addtolength\TotalSectionLength{-2.22221pt}% Modifier to remove overfull box warning
-	\vspace{8pt}% Whitespace before the section title
-	{\color{black!80} \huge #1 \rule[0.15\baselineskip]{\TotalSectionLength}{1pt}}% Print the title and auto-width rule
+\newcommand{\profilesection}[1]{% Takes the title of the section as an argument
+    \setlength\TotalSectionLength{\linewidth}% Set the total line width
+    \settowidth{\SectionTitleLength}{\huge #1 }% Calculate the width of the section title
+    \addtolength\TotalSectionLength{-\SectionTitleLength}% Subtract the section title width from the total width
+    \addtolength\TotalSectionLength{-2.22221pt}% Modifier to remove overfull box warning
+    \vspace{8pt}% Whitespace before the section title
+    {\color{black!80} \huge #1 \rule[0.15\baselineskip]{\TotalSectionLength}{1pt}}% Print the title and auto-width rule
 }
 
 % Define custom commands for CV info
@@ -105,7 +116,7 @@
   \tikzstyle{scorestars}=[star, star points=5, star point ratio=2.25, draw, inner sep=0.15em, anchor=outer point 3]%
   \begin{tikzpicture}[baseline]
     %\foreach \i in {1, ..., #2} {
-    \foreach \i in {1, ..., 10} {
+    \foreach \i in {1, ..., 5} {
       \pgfmathparse{\i<=#1 ? "mainblue" : "maingray"}
       \edef\starcolor{\pgfmathresult}
       \draw (\i*1em, 0) node[name=star\i, scorestars, fill=\starcolor]  {};
@@ -126,20 +137,21 @@
 \newcommand\skills[1]{ 
 	\renewcommand{\skills}{
                 % Use below for bars out of 6
-		\begin{tikzpicture}
-			\foreach [count=\i] \x/\y in {#1}{
-				\draw[fill=maingray,maingray] (0,\i) rectangle (6,\i+0.4);
-				\draw[fill=white,mainblue](0,\i) rectangle (\y,\i+0.4);
-				\node [above right] at (0,\i+0.4) {\x};
-			}
-		\end{tikzpicture}
+		%\begin{tikzpicture}
+			%\foreach [count=\i] \x/\y in {#1}{
+				%\draw[fill=maingray,maingray] (0,\i) rectangle (6,\i+0.4);
+				%\draw[fill=white,mainblue](0,\i) rectangle (\y,\i+0.4);
+				%\node [above right] at (0,\i+0.4) {\x};
+			%}
+		%\end{tikzpicture}
                 % Use below for stars out of 10
-		%\foreach [count=\i] \x/\y in {#1}{
-                    %\begin{itemize}
-                        %\item{\x}
-                    %\end{itemize}
+		\foreach [count=\i] \x/\y in {#1}{
+                    \begin{itemize}[leftmargin=0.5cm]
+                        \item{\x}\newline
+                        \LARGE{\stars{\y}}
+                    \end{itemize}
                     %\LARGE{\stars{\y}}
-                %}
+                }
 	}
 }
 
@@ -149,10 +161,10 @@
 		\begin{flushleft}
 			%\foreach [count=\i] \x/\y in {#1}{ 
 			\foreach [count=\i] \x in {#1}{ 
-            \begin{itemize}
+                            \begin{itemize}[leftmargin=0.5cm]
 				\item \x
 				%\x$ \star $\y
-            \end{itemize}
+                            \end{itemize}
 			}
 		\end{flushleft}
 	}
@@ -161,12 +173,10 @@
 \newcommand\skillstexttech[1]{ 
 	\renewcommand{\skillstexttech}{
 		\begin{flushleft}
-			%\foreach [count=\i] \x/\y in {#1}{ 
 			\foreach [count=\i] \x in {#1}{ 
-            \begin{itemize}
+                            \begin{itemize}[leftmargin=0.5cm]
 				\item \x
-				%\x$ \star $\y
-            \end{itemize}
+                            \end{itemize}
 			}
 		\end{flushleft}
 	}
@@ -249,16 +259,16 @@
 		
 		\ifthenelse{\equal{\aboutme}{}}{}{
 			\profilesection{About me}
-			\begin{flushleft}
+			\begin{justify}
 				\aboutme
-			\end{flushleft}
+			\end{justify}
 		}
 
 		%------------------------------------------------
 
 		\profilesection{Technical Skills}
-		\skills
-		%\skillstexttech
+		%\skills
+		\skillstexttech
 
                 \profilesection{Personal Skills}
 		\skillstext
