@@ -60,7 +60,7 @@
 \definecolor{maingray}{HTML}{B9B9B9}
 
 %----------------------------------------------------------------------------------------
-%	 MISC CONFIGURATIONS
+%	 CONFIGURATIONS
 %----------------------------------------------------------------------------------------
 
 %\renewcommand{\bfseries}{\color{gray}} % Make \textbf produce coloured text instead
@@ -85,6 +85,7 @@
 
 \newlength{\TotalSectionLength} % Define a new length to hold the remaining line width after the section title is printed
 \newlength{\SectionTitleLength} % Define a new length to hold the width of the section title
+
 \newcommand{\profilesection}[1]{% Takes the title of the section as an argument
     \setlength\TotalSectionLength{\linewidth}% Set the total line width
     \settowidth{\SectionTitleLength}{\huge #1 }% Calculate the width of the section title
@@ -109,15 +110,13 @@
 % Command for printing the contact information icons
 \newcommand*\icon[1]{\tikz[baseline=(char.base)]{\node[shape=circle,draw,inner sep=1pt, fill=mainblue,mainblue,text=white] (char) {#1};}}
 
-% Command for printing stars filled by floating points
-%\newcommand\stars[2]{%
+% Command for printing stars filled by floating points for use in skills
 \newcommand\stars[1]{%
-  \pgfmathsetmacro\pgfxa{#1 + 1}%
-  \tikzstyle{scorestars}=[star, star points=5, star point ratio=2.25, draw, inner sep=0.15em, anchor=outer point 3]%
+  \pgfmathsetmacro\pgfxa{#1 + 1}
+  \tikzstyle{scorestars}=[star, star points=5, star point ratio=2.25, draw, inner sep=0.15em, anchor=outer point 3] % Set star parameters
   \begin{tikzpicture}[baseline]
-    %\foreach \i in {1, ..., #2} {
-    \foreach \i in {1, ..., 5} {
-      \pgfmathparse{\i<=#1 ? "mainblue" : "maingray"}
+    \foreach \i in {1, ..., 5} { % How many stars do you want
+      \pgfmathparse{\i<=#1 ? "mainblue" : "maingray"} % Colours of the star
       \edef\starcolor{\pgfmathresult}
       \draw (\i*1em, 0) node[name=star\i, scorestars, fill=\starcolor]  {};
     }
@@ -132,54 +131,56 @@
   \end{tikzpicture}%
 }
 
-
-% Command for printing skill progress bars
-\newcommand\skills[1]{ 
-	\renewcommand{\skills}{
-                % Use below for bars out of 6
-		%\begin{tikzpicture}
-			%\foreach [count=\i] \x/\y in {#1}{
-				%\draw[fill=maingray,maingray] (0,\i) rectangle (6,\i+0.4);
-				%\draw[fill=white,mainblue](0,\i) rectangle (\y,\i+0.4);
-				%\node [above right] at (0,\i+0.4) {\x};
-			%}
-		%\end{tikzpicture}
-                % Use below for stars out of 10
-		\foreach [count=\i] \x/\y in {#1}{
-                    \begin{itemize}[leftmargin=0.5cm]
-                        \item{\x}\newline
-                        \LARGE{\stars{\y}}
-                    \end{itemize}
-                    %\LARGE{\stars{\y}}
-                }
-	}
+% Command for using star skills out of 5 for TECHNICAL SKILLS
+\newcommand\skillsstarstech[1]{
+    \renewcommand{\skillsstarstech}{
+        \foreach [count=\i] \x/\y in {#1}{
+            \begin{itemize}[leftmargin=0.5cm]
+                \item{\x}\newline
+                \LARGE{\stars{\y}}
+            \end{itemize}
+        }
+    }
 }
 
-% Command for printing skills text
-\newcommand\skillstext[1]{ 
-	\renewcommand{\skillstext}{
-		\begin{flushleft}
-			%\foreach [count=\i] \x/\y in {#1}{ 
-			\foreach [count=\i] \x in {#1}{ 
-                            \begin{itemize}[leftmargin=0.5cm]
-				\item \x
-				%\x$ \star $\y
-                            \end{itemize}
-			}
-		\end{flushleft}
-	}
+% Command for using bar skills for TECHNICAL SKILLS
+\newcommand\skillsbartech[1]{ 
+    \renewcommand{\skills}{
+        % Use below for bars out of 6
+        \begin{tikzpicture}
+            \foreach [count=\i] \x/\y in {#1}{
+                \draw[fill=maingray,maingray] (0,\i) rectangle (6,\i+0.4);
+                \draw[fill=white,mainblue](0,\i) rectangle (\y,\i+0.4);
+                \node [above right] at (0,\i+0.4) {\x};
+            }
+        \end{tikzpicture}
+    }
 }
-% Command for printing skills text
+
+% Command for printing skills text for TECHNICAL SKILLS
 \newcommand\skillstexttech[1]{ 
-	\renewcommand{\skillstexttech}{
-		\begin{flushleft}
-			\foreach [count=\i] \x in {#1}{ 
-                            \begin{itemize}[leftmargin=0.5cm]
-				\item \x
-                            \end{itemize}
-			}
-		\end{flushleft}
-	}
+    \renewcommand{\skillstexttech}{
+        \begin{flushleft}
+        \foreach [count=\i] \x in {#1}{ 
+            \begin{itemize}[leftmargin=0.5cm]
+                \item \x
+            \end{itemize}
+        }
+        \end{flushleft}
+    }
+}
+
+% Command for using just text for PERSONAL SKILLS
+\newcommand\skillstextpersonal[1]{
+    \renewcommand{\skillstextpersonal}{
+        \begin{flushleft}
+        \foreach [count=\i] \x in {#1}{ 
+            \begin{itemize}[leftmargin=0.5cm]
+                \item \x
+            \end{itemize}
+        }
+        \end{flushleft}
+    }
 }
 
 % Command for printing references without positional information
@@ -192,11 +193,11 @@
                 \textsc{\large\icon{\faHome}} & \x\\
                 \textsc{\large\icon{\faPencil}} & \y\\\\
             \end{tabular}
-            }
         }
     }
+}
 
-% Command for printing references
+% Command for printing references with an extra field
 \newcommand{\references}[1]{
     \renewcommand{\references}{
         \foreach [count=\i] \w/\x/\y/\z in {#1}{
@@ -207,86 +208,77 @@
                 \textsc{\large\icon{\faWpforms}} & \y\\
                 \textsc{\large\icon{\faPencil}} & \z\\\\
             \end{tabular}
-            }
         }
     }
+}
 
 %----------------------------------------------------------------------------------------
 %	 SIDEBAR LAYOUT
 %----------------------------------------------------------------------------------------
 
 \newcommand{\makeprofile}{
-	\begin{tikzpicture}[remember picture,overlay]
-   		\node [rectangle, fill=sidecolor, anchor=north, minimum width=9cm, minimum height=\paperheight+1cm] (box) at (-5cm,0.5cm){};
-	\end{tikzpicture}
+    % Create a grey(sidecolor) box of 9cm for the side of the resume
+    \begin{tikzpicture}[remember picture,overlay]
+        \node [rectangle, fill=sidecolor, anchor=north, minimum width=9cm, minimum height=\paperheight+1cm] (box) at (-5cm,0.5cm){};
+    \end{tikzpicture}
 
-	%------------------------------------------------
+    % Text block{width}(XCOORDINATE,YCOORDINATE)
+    \begin{textblock}{6}(0.5, 0.2)
+        % If profile pic include it at the top in a circle
+        \ifthenelse{\equal{\profilepic}{}}{}{
+            \begin{center}
+            \begin{tikzpicture}[x=\imagescale,y=-\imagescale]
+                \clip (600/2, 567/2) circle (567/2);
+                \node[anchor=north west, inner sep=0pt, outer sep=0pt] at (0,0) {\includegraphics[width=\imagewidth]{\profilepic}};
+            \end{tikzpicture}
+            \end{center}
+        }
 
-	\begin{textblock}{6}(0.5, 0.2)
-			
-		%------------------------------------------------
+        % Include person's name
+	{\huge\color{mainblue}{\bf \cvname}}
+
+        % Include job title
+	{\Large\color{black!80}\cvjobtitle}
+
+        % Include all of these if they are specified
+        % arraystretch is a FACTOR representing the distance between two rows. Default is 1
+        \renewcommand{\arraystretch}{1.6}
+            \begin{tabular}{p{0.5cm} @{\hskip 0.5cm}p{5cm}}
+                \ifthenelse{\equal{\cvdate}{}}{}{\textsc{\Large\icon{\Info}} & \cvdate\\}
+                \ifthenelse{\equal{\cvaddress}{}}{}{\textsc{\large\icon{\faHome}} & \cvaddress\\}
+                \ifthenelse{\equal{\cvnumberphone}{}}{}{\textsc{\large\icon{\faPhone}} & \cvnumberphone\\}
+                \ifthenelse{\equal{\cvsite}{}}{}{\textsc{\Large\icon{\Mundus}} & \cvsite\\}
+                \ifthenelse{\equal{\cvgit}{}}{}{\textsc{\large\icon{\faGithub}} & \cvgit\\}
+                \ifthenelse{\equal{\cvmail}{}}{}{\textsc{\Large\icon{\Letter}} & \href{mailto:\cvmail}{\cvmail}}
+            \end{tabular}
 		
-		\ifthenelse{\equal{\profilepic}{}}{}{
-			\begin{center}
-				\begin{tikzpicture}[x=\imagescale,y=-\imagescale]
-					\clip (600/2, 567/2) circle (567/2);
-					\node[anchor=north west, inner sep=0pt, outer sep=0pt] at (0,0) {\includegraphics[width=\imagewidth]{\profilepic}};
-				\end{tikzpicture}
-			\end{center}
-		}
+        % Include aboutme if present
+        \ifthenelse{\equal{\aboutme}{}}{}{
+            \profilesection{About me}
+            \begin{justify}
+                \aboutme
+            \end{justify}
+        }
 
-		%------------------------------------------------
+        % Choose if stars, bars, or text for technical skills
+        \profilesection{Technical Skills}
+            %\skillsstarstech
+            %\skillsbartech
+            \skillstexttech
 
-		{\huge\color{mainblue}{\bf \cvname}}
+        % Include Personal skills
+        \profilesection{Personal Skills}
+            \skillstext
 
-		%------------------------------------------------
+        % Include reference
+	\profilesection{References}
+            \references
+            \shortreferences
 
-		{\Large\color{black!80}\cvjobtitle}
-
-		%------------------------------------------------
-
-		\renewcommand{\arraystretch}{1.6}
-		\begin{tabular}{p{0.5cm} @{\hskip 0.5cm}p{5cm}}
-			\ifthenelse{\equal{\cvdate}{}}{}{\textsc{\Large\icon{\Info}} & \cvdate\\}
-			\ifthenelse{\equal{\cvaddress}{}}{}{\textsc{\large\icon{\faHome}} & \cvaddress\\}
-			\ifthenelse{\equal{\cvnumberphone}{}}{}{\textsc{\large\icon{\faPhone}} & \cvnumberphone\\}
-			\ifthenelse{\equal{\cvsite}{}}{}{\textsc{\Large\icon{\Mundus}} & \cvsite\\}
-			\ifthenelse{\equal{\cvgit}{}}{}{\textsc{\large\icon{\faGithub}} & \cvgit\\}
-			\ifthenelse{\equal{\cvmail}{}}{}{\textsc{\Large\icon{\Letter}} & \href{mailto:\cvmail}{\cvmail}}
-		\end{tabular}
-
-		%------------------------------------------------
-		
-		\ifthenelse{\equal{\aboutme}{}}{}{
-			\profilesection{About me}
-			\begin{justify}
-				\aboutme
-			\end{justify}
-		}
-
-		%------------------------------------------------
-
-		\profilesection{Technical Skills}
-		%\skills
-		\skillstexttech
-
-                \profilesection{Personal Skills}
-		\skillstext
-		%\scriptsize
-		% (*)[The skill scale is from 0 (Fundamental Awareness) to 6 (Expert).]
-			
-		%------------------------------------------------
-
-		\profilesection{References}
-
-		\references
-                \shortreferences
-			
-		%------------------------------------------------
-
-	\end{textblock}
+    \end{textblock}
 }
 
+% TODO BELOW THIS
 %----------------------------------------------------------------------------------------
 %	 COLOURED SECTION TITLE BOX
 %----------------------------------------------------------------------------------------
