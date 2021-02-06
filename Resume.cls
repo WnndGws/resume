@@ -7,6 +7,7 @@
 %
 % Original author:
 % Carmine Spagnuolo (cspagnuolo@unisa.it)
+%
 % Major modifications by:
 % Vel (vel@LaTeXTemplates.com)
 %
@@ -66,7 +67,7 @@
 %\renewcommand{\bfseries}{\color{gray}} % Make \textbf produce coloured text instead
 \pagestyle{empty} % Disable headers and footers
 \tolerance=1 % Normally the lower the value, the better the paragraph will look, but you run the risk of reducing the list of possible breaks so much that you end up with overfull lines. Can range 0 to 10000
-\emergencystretch=\maxdimen % parameter which stretches text over multiple passes to balance the spacing to the set tolerance
+\emergencystretch=\maxdimen%% parameter which stretches text over multiple passes to balance the spacing to the set tolerance
 \hyphenpenalty=10000 % basically infinite. Wont use hyphens over line breaks
 \hbadness=10000 % Tells TeX at what point to report badness errors (i.e. underfull and overfull error). 0 to 10000. Large number is basically dont report
 \setlength{\parindent}{0pt} % Disable paragraph indentation
@@ -78,8 +79,8 @@
 \setlength{\TPHorizModule}{1cm} % Left margin
 \setlength{\TPVertModule}{2.0cm} % Top margin
 
-\newlength\imagewidth
-\newlength\imagescale
+\newlength\imagewidth%
+\newlength\imagescale%
 \pgfmathsetlength{\imagewidth}{5cm}
 \pgfmathsetlength{\imagescale}{\imagewidth/600}
 
@@ -108,7 +109,7 @@
 \newcommand{\cvgit}[1]{\renewcommand{\cvgit}{#1}}
 
 % Command for printing the contact information icons
-\newcommand*\icon[1]{\tikz[baseline=(char.base)]{\node[shape=circle,draw,inner sep=1pt, fill=mainblue,mainblue,text=white] (char) {#1};}}
+\newcommand*\icon[1]{\tikz[baseline= (char.base)]{\node[shape=circle,draw,inner sep=1pt, fill=mainblue,mainblue,text=white] (char) {#1};}}
 
 % Command for printing stars filled by floating points for use in skills
 \newcommand\stars[1]{%
@@ -134,7 +135,7 @@
 % Command for using star skills out of 5 for TECHNICAL SKILLS
 \newcommand\skillsstarstech[1]{
     \renewcommand{\skillsstarstech}{
-        \foreach [count=\i] \x/\y in {#1}{
+        \foreach[count=\i] \x/\y in {#1}{
             \begin{itemize}[leftmargin=0.5cm]
                 \item{\x}\newline
                 \LARGE{\stars{\y}}
@@ -145,23 +146,31 @@
 
 % Command for using bar skills for TECHNICAL SKILLS
 \newcommand\skillsbartech[1]{ 
-    \renewcommand{\skills}{
-        % Use below for bars out of 6
+    \renewcommand{\skillsbartech}{
+        % Use below for bars out of 10
         \begin{tikzpicture}
             \foreach [count=\i] \x/\y in {#1}{
-                \draw[fill=maingray,maingray] (0,\i) rectangle (6,\i+0.4);
-                \draw[fill=white,mainblue](0,\i) rectangle (\y,\i+0.4);
-                \node [above right] at (0,\i+0.4) {\x};
+                \draw[fill=maingray,maingray] (0,-\i) rectangle (6,-\i+0.4);
+                \draw[fill=white,mainblue](0,-\i) rectangle (0.6*\y,-\i+0.4);
+                \node [above right ] at (0,-\i+0.4) {\x};
+                \foreach \z in {0,1,2,...,10}{
+                    \coordinate (A\z) at ($(0,-\i)+(1.2*\z*0.5cm,0)$) {};
+                    \ifodd\z
+                        \draw[white] ($(A\z)$) -- ($(A\z)+(0,2.5pt)$);
+                    \else
+                        \draw[white] ($(A\z)$) -- ($(A\z)+(0,5pt)$);
+                    \fi
+                }
             }
         \end{tikzpicture}
     }
 }
 
 % Command for printing skills text for TECHNICAL SKILLS
-\newcommand\skillstexttech[1]{ 
+\newcommand\skillstexttech[1]{
     \renewcommand{\skillstexttech}{
         \begin{flushleft}
-        \foreach [count=\i] \x in {#1}{ 
+        \foreach[count=\i] \x in {#1}{ 
             \begin{itemize}[leftmargin=0.5cm]
                 \item \x
             \end{itemize}
@@ -174,7 +183,7 @@
 \newcommand\skillstextpersonal[1]{
     \renewcommand{\skillstextpersonal}{
         \begin{flushleft}
-        \foreach [count=\i] \x in {#1}{ 
+        \foreach[count=\i] \x in {#1}{ 
             \begin{itemize}[leftmargin=0.5cm]
                 \item \x
             \end{itemize}
@@ -186,7 +195,7 @@
 % Command for printing references without positional information
 \newcommand{\shortreferences}[1]{
     \renewcommand{\shortreferences}{
-        \foreach [count=\i] \w/\x/\y/ in {#1}{
+        \foreach[count=\i] \w/\x/\y/ in {#1}{
             \renewcommand{\arraystretch}{1.6}
             \begin{tabular}{p{0.5cm} @{\hskip 0.5cm}p{5cm}}
                 \textsc{\large\icon{\faUser}} & \textbf{\w}\\
@@ -200,7 +209,7 @@
 % Command for printing references with an extra field
 \newcommand{\references}[1]{
     \renewcommand{\references}{
-        \foreach [count=\i] \w/\x/\y/\z in {#1}{
+        \foreach[count=\i] \w/\x/\y/\z in {#1}{
             \renewcommand{\arraystretch}{1.6}
             \begin{tabular}{p{0.5cm} @{\hskip 0.5cm}p{5cm}}
                 \textsc{\large\icon{\faUser}} & \textbf{\w}\\
@@ -223,7 +232,7 @@
     \end{tikzpicture}
 
     % Text block{width}(XCOORDINATE,YCOORDINATE)
-    \begin{textblock}{6}(0.5, 0.2)
+    \begin{textblock}{6} (0.5, 0.2)
         % If profile pic include it at the top in a circle
         \ifthenelse{\equal{\profilepic}{}}{}{
             \begin{center}
@@ -256,76 +265,57 @@
         \ifthenelse{\equal{\aboutme}{}}{}{
             \profilesection{About me}
             \begin{justify}
-                \aboutme
+                \aboutme%
             \end{justify}
         }
 
+        % TODO figure out why can have other 2 alone but not bars alone, suspect "itemize" is why
         % Choose if stars, bars, or text for technical skills
         \profilesection{Technical Skills}
-            %\skillsstarstech
-            %\skillsbartech
-            \skillstexttech
+            %\skillsstarstech%
+            \skillsbartech%
+            %\skillstexttech%
 
         % Include Personal skills
         \profilesection{Personal Skills}
-            \skillstext
+            \skillstextpersonal%
 
         % Include reference
 	\profilesection{References}
-            \references
-            \shortreferences
+            \references%
+            \shortreferences%
 
     \end{textblock}
 }
 
-% TODO BELOW THIS
 %----------------------------------------------------------------------------------------
 %	 COLOURED SECTION TITLE BOX
 %----------------------------------------------------------------------------------------
 
-% Command to create the rounded boxes around the first three letters of section titles
-\newcommand*\round[2]{%
-	\tikz[baseline=(char.base)]\node[anchor=north west, draw,rectangle, rounded corners, inner sep=1.6pt, minimum size=5.5mm, text height=3.6mm, fill=#2,#2,text=white](char){#1};%
+% Command to create the rounded boxes around the section titles
+\newcommand*\round[2]{
+    \tikz[baseline= (char.base)]\node[anchor=north west, draw,rectangle, rounded corners, inner sep=1.6pt, minimum size=5.5mm, text height=3.6mm, fill=#2,#2,text=white] (char){#1};
 }
 
 \newcounter{colorCounter}
-%\newcommand{\sectioncolor}[1]{%
-	%{%
-		%\round{#1}{
-			%\ifcase\value{colorCounter}%
-			%maingray\or%
-			%mainblue\or%
-			%maingray\or%
-			%mainblue\or%
-			%maingray\or%
-			%mainblue\or%
-			%maingray\or%
-			%mainblue\or%
- 			%maingray\or%
-			%mainblue\else%
-			%maingray\fi%
-		%}%
-	%}%
-	%\stepcounter{colorCounter}%
-%}
-
-\newcommand{\sectioncolor}[1]{%
-	{%
-		\round{#1}{
-			\ifcase\value{colorCounter}%
-			mainblue\or%
-			mainblue\or%
-			mainblue\or%
-			mainblue\or%
-			mainblue\or%
-			mainblue\or%
-			mainblue\or%
-			mainblue\else%
-			mainblue\fi%
-		}%
-	}%
-	\stepcounter{colorCounter}%
+\newcommand{\sectioncolor}[1]{
+    {\round{#1}{
+        \ifcase\value{colorCounter}
+            mainblue\or%
+            mainblue\or%
+            mainblue\or%
+            mainblue\or%
+            mainblue\or%
+            mainblue\or%
+            mainblue\or%
+            mainblue\else%
+            mainblue\fi%
+        }%
+    }%
+    \stepcounter{colorCounter}%
 }
+
+% TODO below this
 
 \renewcommand{\section}[1]{
 	{%
