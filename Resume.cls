@@ -320,10 +320,7 @@
 % TODO below this
 
 \renewcommand{\section}[1]{
-	{%
-		\color{gray}%
-		\Large\sectioncolor{#1}%
-	}
+    \Large\mainblue#1%
 }
 
 \renewcommand{\subsection}[1]{
