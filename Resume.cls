@@ -44,7 +44,7 @@
 \RequirePackage{pgffor}
 \RequirePackage{marvosym}
 \RequirePackage{parskip}
-\RequirePackage{fontawesome}
+\RequirePackage{fontawesome5}
 \RequirePackage{array}
 
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
@@ -200,7 +200,7 @@
             \begin{tabular}{p{0.5cm} @{\hskip 0.5cm}p{5cm}}
                 \textsc{\large\icon{\faUser}} & \textbf{\w}\\
                 \textsc{\large\icon{\faHome}} & \x\\
-                \textsc{\large\icon{\faPencil}} & \y\\\\
+                \textsc{\large\icon{\faPencil*}} & \y\\\\
             \end{tabular}
         }
     }
@@ -215,7 +215,7 @@
                 \textsc{\large\icon{\faUser}} & \textbf{\w}\\
                 \textsc{\large\icon{\faHome}} & \x\\
                 \textsc{\large\icon{\faWpforms}} & \y\\
-                \textsc{\large\icon{\faPencil}} & \z\\\\
+                \textsc{\large\icon{\faPencil*}} & \z\\\\
             \end{tabular}
         }
     }
