@@ -132,51 +132,44 @@
   \end{tikzpicture}%
 }
 
+\newcommand\bars[1]{%
+% Use below for bars out of 10
+  \begin{tikzpicture}[baseline]
+      \draw[fill=maingray,maingray] (0,0) rectangle (6,0.4);
+      \draw[fill=white,mainblue](0,0) rectangle (0.6*#1,0.4);
+      \foreach \z in {0,1,2,...,10}{
+        \coordinate (A\z) at ($(0,0)+(1.2*\z*0.5cm,0)$) {};
+        \ifodd\z
+          \draw[white] ($(A\z)$) -- ($(A\z)+(0,2.5pt)$);
+        \else
+          \draw[white] ($(A\z)$) -- ($(A\z)+(0,5pt)$);
+        \fi
+      }
+  \end{tikzpicture}%
+}
+
 % Command for using star skills out of 5 for TECHNICAL SKILLS
 \newcommand\skillsstarstech[1]{
-    \renewcommand{\skillsstarstech}{
-        \foreach[count=\i] \x/\y in {#1}{
-            \begin{itemize}[leftmargin=0.5cm]
-                \item{\x}\newline
-                \LARGE{\stars{\y}}
-            \end{itemize}
-        }
+  \renewcommand{\skillsstarstech}{
+    \foreach[count=\i] \x/\y in {#1}{
+      \begin{itemize}[leftmargin=0.5cm]
+        \item{\x}\newline
+        \LARGE{\stars{\y}}
+      \end{itemize}
     }
+  }
 }
 
 % Command for using bar skills for TECHNICAL SKILLS
-\newcommand\skillsbartech[1]{ 
-    \renewcommand{\skillsbartech}{
-        % Use below for bars out of 10
-        \begin{tikzpicture}
-            \foreach [count=\i] \x/\y in {#1}{
-                \draw[fill=maingray,maingray] (0,-\i) rectangle (6,-\i+0.4);
-                \draw[fill=white,mainblue](0,-\i) rectangle (0.6*\y,-\i+0.4);
-                \node [above right ] at (0,-\i+0.4) {\x};
-                \foreach \z in {0,1,2,...,10}{
-                    \coordinate (A\z) at ($(0,-\i)+(1.2*\z*0.5cm,0)$) {};
-                    \ifodd\z
-                        \draw[white] ($(A\z)$) -- ($(A\z)+(0,2.5pt)$);
-                    \else
-                        \draw[white] ($(A\z)$) -- ($(A\z)+(0,5pt)$);
-                    \fi
-                }
-            }
-        \end{tikzpicture}
+\newcommand\skillsbartech[1]{
+  \renewcommand{\skillsbartech}{
+    \foreach[count=\i] \x/\y in {#1}{
+      \begin{itemize}[leftmargin=0.5cm]
+        \item{\x}\newline
+        \bars{\y}
+      \end{itemize}
     }
-}
-
-% Command for printing skills text for TECHNICAL SKILLS
-\newcommand\skillstexttech[1]{
-    \renewcommand{\skillstexttech}{
-        \begin{flushleft}
-        \foreach[count=\i] \x in {#1}{ 
-            \begin{itemize}[leftmargin=0.5cm]
-                \item \x
-            \end{itemize}
-        }
-        \end{flushleft}
-    }
+  }
 }
 
 % Command for using just text for PERSONAL SKILLS
@@ -269,12 +262,11 @@
             \end{justify}
         }
 
-        % TODO figure out why can have other 2 alone but not bars alone, suspect "itemize" is why
+        % TODO figure out why can have other 2 alone but not bars alone
         % Choose if stars, bars, or text for technical skills
         \profilesection{Technical Skills}
-            %\skillsstarstech%
-            \skillsbartech%
-            %\skillstexttech%
+            \ifdefined\skillsbartech \skillsbartech \fi
+            \ifdefined\skillsstarstech \skillsstarstech \fi
 
         % Include Personal skills
         \profilesection{Personal Skills}
