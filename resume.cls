@@ -3,7 +3,7 @@
 % Version 2.0
 %
 % This template has been modified from a template downloaded on 2016/01/15 from:
-% http://www.LaTeXTemplates.com
+% https://github.com/spagnuolocarmine/TwentySecondsCurriculumVitae-LaTex
 %
 % Original author:
 % Carmine Spagnuolo (cspagnuolo@unisa.it)
@@ -306,7 +306,6 @@
     \stepcounter{colorCounter}%
 }
 
-%% TODO BELOW THIS
 \renewcommand{\section}[1]{{
     \color{gray}%
     \Large\sectioncolor{#1}%
