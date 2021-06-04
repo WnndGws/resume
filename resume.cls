@@ -12,7 +12,7 @@
 % Vel (vel@LaTeXTemplates.com)
 %
 % Major final modifications by:
-% Wynand Gouws (https://github.com/WnndGws)
+% WnndGws (https://github.com/WnndGws)
 %
 % License:
 % The MIT License (see included LICENSE file)
