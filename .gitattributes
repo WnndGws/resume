@@ -1,4 +1,5 @@
 **.old filter=git-crypt diff=git-crypt
+**.pdf filter=git-crypt diff=git-crypt
 **.txt filter=git-crypt diff=git-crypt
 **.aux filter=git-crypt diff=git-crypt
 **.fls filter=git-crypt diff=git-crypt
