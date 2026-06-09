@@ -13,8 +13,7 @@ perennial-regex = "^version-.+"
 unknown-type = "contribution"
 
 [create]
-branch-prefix = "wip-"
-new-branch-type = "prototype"
+new-branch-type = "contribution"
 share-new-branches = "push"
 stash = true
 
